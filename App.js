@@ -1,20 +1,40 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useLayoutEffect } from 'react';
+
+//Screens
+import OnboardingPages from './screens/OnboardingScreen';
+import Login from './screens/Login';
+import Register from './screens/Register';
+import Home from './screens/Home';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer >
+      <Stack.Navigator initialRouteName='onboarding'>
+        <Stack.Screen name="onboarding" component={OnboardingPages}  />
+        <Stack.Screen name="login" component={Login}  />
+        <Stack.Screen name="register" component={Register}  />
+        <Stack.Screen name="home" component={Home}  />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+//style takes a json but stylesheet.create creates an validate object + they may be more optimized
+const Colors = StyleSheet.create({
+  SecondaryGray: "#D9D9D9",
+  PrimaryGray: "#B3B3B3",
+})
+
+
+
+
+
+
+
+
