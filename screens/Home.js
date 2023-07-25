@@ -12,6 +12,7 @@ import NavTab from '../components/NavTab comp/NavTab';
 import Search from '../components/Search';
 import RecommendedPosts from '../components/Posts/RecommendedPosts';
 import { auth } from '../FirebaseConfig';
+import Header from '../components/Header';
 
 //custon 
 
@@ -31,17 +32,18 @@ export default function Home({navigation}) {
       
   <SafeAreaView style={SafeViewAndroid.AndroidSafeArea}>
     <View style={ss.Home}>
-        {/* Search section */}
-        <Search />
+		{/* Header */}
+		<Header />
 
-		{/* welcome user */}
-		<Text>{auth.currentUser?.email}</Text>
+
+        {/* welcome user */}
+        <Text>{auth.currentUser?.email}</Text>
 
         
         {/* 5 Recommended Match section  */}
         <RecommendedPosts/>
         {/* NavTab section */}
-        <NavTab style={ss.NavTab}/>
+        <NavTab style={ss.NavTab} nav={navigation}/>
     </View>
   </SafeAreaView>
     );
@@ -49,11 +51,12 @@ export default function Home({navigation}) {
 
   const ss = StyleSheet.create({
     Home: {
-        backgroundColor: Colors.AccentWhite,
+        backgroundColor: Colors.PrimaryBlack,
         paddingLeft:15,
         paddingRight:15,
         height: '100%',
-        paddingTop: 15,
+        paddingTop: 39,
+
         
     },
     NavTab: {

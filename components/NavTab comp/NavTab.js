@@ -2,21 +2,38 @@
 import React from 'react';
 import { StyleSheet, Text, View } from "react-native"
 import NavTabBtn from './NavTabBtn';
+import Colors from '../../styles/Colors';
 
 
-export default function NavTab(){
+export default function NavTab({nav}){
     return (
         <View style={ss.NavTab}>
             {/* home */}
-            <NavTabBtn />
-            {/* club */}
-            <NavTabBtn />
+            <NavTabBtn 
+                type="home"
+                label="Home"
+                
+            />
+            {/* search */}
+            <NavTabBtn 
+                type="search"
+                label="Search"
+            />
+            {/* create */}
+            <NavTabBtn 
+                type="create"
+                label="Create"
+            />
             {/* Community */}
-            <NavTabBtn />
+            <NavTabBtn 
+                type="community"
+                label="Community"
+            />
             {/* Profile */}
-            <NavTabBtn />
-            {/* Setting */}
-            <NavTabBtn />
+            <NavTabBtn 
+                type="profile"
+                label="Profile"
+            />
         </View>
     )
 }
@@ -28,15 +45,15 @@ const ss = StyleSheet.create({
         
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: 'white',
-        borderRadius: 50,
-        height: 70,
-        width: '100%',
-        paddingTop: 10,
-        paddingLeft: 10,
-        paddingRight: 10,
+        alignItems: 'center',
+        backgroundColor: Colors.PrimaryBlack,
+        height: 80,
+        width: '110%',  
         position: 'absolute',
-        bottom: 20,
-        left: 20,
+        paddingLeft:20,
+        paddingRight:20,
+        bottom: 0,
+        left: 0,
+        
     }
 })

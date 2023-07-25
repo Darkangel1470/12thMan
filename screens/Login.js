@@ -16,8 +16,8 @@ import { auth } from '../FirebaseConfig';
 
 export default function Login({navigation}){
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('a@gmail.com')
+  const [password, setPassword] = useState('123456')
   const [isChecked, setChecked] = useState(false);
 
 	const handleLogIn = () => {

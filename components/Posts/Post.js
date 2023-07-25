@@ -56,7 +56,7 @@ const ss = StyleSheet.create({
     },
     UpperHalf: {
         flex:1,
-        backgroundColor: Colors.PrimaryBlack,
+        backgroundColor: "#00499F",
         flexDirection: "row",
         TextAlign: 'center',
 

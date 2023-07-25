@@ -6,7 +6,7 @@ export default function RecommendedPosts(){
 
     return (
         <View style={{padding: 10}}>
-            <Text>Recommended posts</Text>
+            <Text style={{color: 'white'}}>Recommended posts</Text>
             <Text></Text>
             <Post/>
             <Text></Text>
