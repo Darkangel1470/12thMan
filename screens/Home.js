@@ -34,14 +34,12 @@ export default function Home({navigation}) {
     <View style={ss.Home}>
 		{/* Header */}
 		<Header />
-
-
         {/* welcome user */}
         <Text>{auth.currentUser?.email}</Text>
-
         
         {/* 5 Recommended Match section  */}
-        <RecommendedPosts/>
+        {<RecommendedPosts/>}
+
         {/* NavTab section */}
         <NavTab style={ss.NavTab} nav={navigation}/>
     </View>

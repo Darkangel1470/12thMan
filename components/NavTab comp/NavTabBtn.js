@@ -1,28 +1,27 @@
 
-
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native"
 
 
 
-export default function NavTabBtn({type, label}){
-
-    const navigation = useNavigation()
-
+export default function NavTabBtn({type, label, nav }){
+    
     var sauce= require("../../assets/Images/NavTabIcons/HomeIcon.png");
-    var handlePress = () =>{
-        navigation.navigate('createpost')
-    }
+    const navigation = useNavigation()
+    var handlePress;
     switch(type){
         case "home":
-            
             sauce = require("../../assets/Images/NavTabIcons/HomeIcon.png")
             break;
         case "search":
             sauce = require("../../assets/Images/NavTabIcons/SearchIcon.png")
             break;
         case "create":
+            handlePress = () =>{
+                console.log("Pressed")
+                navigation.navigate("createpost")
+            }
             sauce = require("../../assets/Images/NavTabIcons/CreateIcon.png")
             break;
         case "community":

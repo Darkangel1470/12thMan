@@ -30,19 +30,20 @@ const ss = StyleSheet.create({
         backgroundColor: Colors.SecondaryGray,
     },  
     button: {
-        height: 55,
+        height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12,
+        paddingVertical: 10,
         paddingHorizontal: 32,
         borderRadius: 20,
         elevation: 3,
       },
-      text: {
+    text: {
+        position: 'absolute',
         fontSize: 16,
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'black',
-      },
+    },
 })

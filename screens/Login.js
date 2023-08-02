@@ -26,6 +26,7 @@ export default function Login({navigation}){
 			.then(userCredentials => {
 				const user = userCredentials.user;
 				console.log(user.email);
+        navigation.navigate('home')
 			})
 			.catch(err => alert(err.message));
 	}
@@ -46,7 +47,6 @@ export default function Login({navigation}){
       })
     },[])
 
-    showtext = ()=>{console.log("Btn clicked")};
   
   
     return(

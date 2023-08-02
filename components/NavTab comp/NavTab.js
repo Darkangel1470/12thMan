@@ -12,27 +12,32 @@ export default function NavTab({nav}){
             <NavTabBtn 
                 type="home"
                 label="Home"
+                nav={nav}
                 
             />
             {/* search */}
             <NavTabBtn 
                 type="search"
                 label="Search"
+                nav={nav}
             />
             {/* create */}
             <NavTabBtn 
                 type="create"
                 label="Create"
+                nav={nav}
             />
             {/* Community */}
             <NavTabBtn 
                 type="community"
                 label="Community"
+                nav={nav}
             />
             {/* Profile */}
             <NavTabBtn 
                 type="profile"
                 label="Profile"
+                nav={nav}
             />
         </View>
     )

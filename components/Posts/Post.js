@@ -1,27 +1,43 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/Colors";
 import Font from "../../styles/Font";
+import { useNavigation } from '@react-navigation/native';
+import JoinPost from "./JoinPost";
 
-export default function Post(){
-     return (
+export default function Post({item}){
+    var player,day,hour,min,location,joined;
+    player = item.player
+    location = item.location
+    var dt = new Date(item.DateTime.seconds*1000)
+    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT']
+    day = days[dt.getDay()]
+    hour = dt.getHours()
+    min = dt.getMinutes()
+    min = min>9? min: "0"+min;
+    console.log('item.id :>> ', item.pid);
+    const navigation = useNavigation()
+    const handleJoin = () => {
+        navigation.navigate('postdetails',{ pid: item.pid})
+    }
+    return (
         <View style={ss.Post}>
             {/* Upper half */}
             <View style={ss.UpperHalf}>
                 {/* How many */}
                 <View style={ss.Who}>
                     <Text style={ss.TextWhite}>Players</Text>
-                    <Text style={ss.TextWhite}>6v6</Text>
+                    <Text style={ss.TextWhite}>{player}v{player}</Text>
                 </View>
                 {/* when */}
                 <View style={ss.When}>
-                    <Text style={ss.TextWhite}>FRI</Text>
-                    <Text style={ss.TextWhite}>17:00</Text>
+                    <Text style={ss.TextWhite}>{day} </Text>
+                    <Text style={ss.TextWhite}>{hour}:{min}</Text>
                 </View>
                 {/* Where */}
                 <View style={ss.Where}>
                     <Text style={ss.TextWhite}>Turf</Text>
-                    <Text style={ss.TextWhite}>Churchgate</Text>
+                    <Text style={ss.TextWhite}>{location}</Text>
                 </View>
             </View>
 
@@ -34,14 +50,9 @@ export default function Post(){
                     /> */}
                     <Text>logo - logo</Text>
                 </View>
-                {/* Join button */}
-                <View style={ss.Join}>
-                    <Text style={{color: Colors.SecondaryBlue}}>Join  </Text>
-                    <View style={ss.JoinNum}>
-                        <Text style={{color: Colors.SecondaryBlue}}> 5/12 </Text>
-                    </View>
-                </View>
 
+                {/* Join button */}
+                <JoinPost handleJoin={handleJoin} player={player}/>
             </View>
         </View>
      )
@@ -51,8 +62,8 @@ const ss = StyleSheet.create({
     Post:{
         backgroundColor: "white",
         borderRadius: 30,
-        height:220
-        
+        height:220,
+        marginBottom: 10,
     },
     UpperHalf: {
         flex:1,
