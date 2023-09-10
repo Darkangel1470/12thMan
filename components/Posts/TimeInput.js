@@ -11,7 +11,7 @@ function DInput({post, setPost}){
     console.log('post.dateTime :>> ', post.dateTime.getHours());
     const handleConfirm = (date)=>{
         setPost({
-            player: post.players,
+            player: post.player,
             dateTime: date,
             location: post.location
         })
@@ -38,6 +38,7 @@ function DInput({post, setPost}){
         </View>
     )
 }
+
 function TInput({post, setPost}){
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     console.log("post.dateTime :>> " , post.dateTime);
@@ -66,8 +67,7 @@ function TInput({post, setPost}){
             <Pressable onPress={() => setDatePickerVisibility(true)} style={dtss.input}>
                 <Text style={dtss.text} >{hour+":"+mins+" "+AmPm}</Text>
             </Pressable>
-            <DateTimePickerModal
-                isVisible={isDatePickerVisible}
+            <DateTimePickerModal isVisible={isDatePickerVisible}
                 mode="time"
                 onConfirm={handleConfirm}
                 onCancel={()=>{setDatePickerVisibility(false)}}

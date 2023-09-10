@@ -1,4 +1,4 @@
-import {View, Text, Button, StyleSheet,Pressable} from "react-native"
+import {Text, StyleSheet, Pressable} from "react-native"
 
 //import custom styles
 import Colors from "../../styles/Colors";
@@ -19,9 +19,8 @@ export default function FormButton({title, type, onpress}){
 
 //functional
 //for register
-
-
 //styling
+
 const ss = StyleSheet.create({
     PrimaryBtn:{
         backgroundColor: Colors.PrimaryGreen,

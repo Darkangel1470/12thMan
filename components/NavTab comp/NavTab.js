@@ -3,41 +3,37 @@ import React from 'react';
 import { StyleSheet, Text, View } from "react-native"
 import NavTabBtn from './NavTabBtn';
 import Colors from '../../styles/Colors';
+import { screen } from '../../styles/SafeViewAndroid';
 
 
-export default function NavTab({nav}){
+export default function NavTab(){
     return (
         <View style={ss.NavTab}>
             {/* home */}
             <NavTabBtn 
                 type="home"
                 label="Home"
-                nav={nav}
                 
             />
             {/* search */}
             <NavTabBtn 
                 type="search"
                 label="Search"
-                nav={nav}
             />
             {/* create */}
             <NavTabBtn 
                 type="create"
                 label="Create"
-                nav={nav}
             />
             {/* Community */}
             <NavTabBtn 
                 type="community"
-                label="Community"
-                nav={nav}
+                label="Club"
             />
             {/* Profile */}
             <NavTabBtn 
                 type="profile"
                 label="Profile"
-                nav={nav}
             />
         </View>
     )
@@ -53,7 +49,7 @@ const ss = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: Colors.PrimaryBlack,
         height: 80,
-        width: '110%',  
+        width: screen.width,
         position: 'absolute',
         paddingLeft:20,
         paddingRight:20,

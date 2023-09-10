@@ -11,6 +11,12 @@ import Register from './screens/Register';
 import Home from './screens/Home';
 import CreatePost from './screens/CreatePost';
 import PostDetails from './screens/PostDetails';
+import Profile from './screens/Profile';
+import Club from './screens/Club';
+import CreateClub from './screens/CreateClub';
+import ClubDetails from './screens/ClubDetails';
+import Chat from './screens/Chat';
+import PersonalChat from './screens/PersonalChat';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -23,6 +29,12 @@ export default function App() {
         <Stack.Screen name="home" component={Home}  />
         <Stack.Screen name="createpost" component={CreatePost}  />
         <Stack.Screen name="postdetails" component={PostDetails}  />
+        <Stack.Screen name="profile" component={Profile}  />
+        <Stack.Screen name="club" component={Club}  />
+        <Stack.Screen name="createclub" component={CreateClub}  />
+        <Stack.Screen name="clubdetails" component={ClubDetails}  />
+        <Stack.Screen name="chat" component={Chat}  />
+        <Stack.Screen name="personalchat" component={PersonalChat}  />
 
       </Stack.Navigator>
     </NavigationContainer>

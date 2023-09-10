@@ -66,7 +66,7 @@ const ss = StyleSheet.create({
         color: Colors.AccentWhite,
     },
     downbtn:{
-        width:100,
+        width:8*14,
         backgroundColor: Colors.SecondaryGray,
         padding: 20,
         paddingTop:10,

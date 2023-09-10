@@ -1,43 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/Colors";
 import Font from "../../styles/Font";
 import { useNavigation } from '@react-navigation/native';
 import JoinPost from "./JoinPost";
+import { auth } from "../../FirebaseConfig";
 
 export default function Post({item}){
-    var player,day,hour,min,location,joined;
-    player = item.player
-    location = item.location
-    var dt = new Date(item.DateTime.seconds*1000)
-    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT']
-    day = days[dt.getDay()]
-    hour = dt.getHours()
-    min = dt.getMinutes()
-    min = min>9? min: "0"+min;
-    console.log('item.id :>> ', item.pid);
+
+    //variables
     const navigation = useNavigation()
+    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT']
+    var player,day,hour,min,location,dt;
+
+    //states
+    const [mounted, setMounted] = useState(true);
+    const [isJoined, setIsJoined] = useState(false)
+
+    // functions
     const handleJoin = () => {
         navigation.navigate('postdetails',{ pid: item.pid})
     }
+    useEffect(()=>{if(mounted){
+        if(auth.currentUser?.email==item.hostid){
+            setIsJoined(true)
+        }
+    }},[mounted]);
+
+    // Process Details for presentation
+    player = item.player;
+    location = item.location;
+    dt = new Date(item.DateTime.seconds*1000)
+    day = days[dt.getDay()];hour = dt.getHours();min = dt.getMinutes();min = min>9? min: "0"+min;
+
     return (
         <View style={ss.Post}>
             {/* Upper half */}
             <View style={ss.UpperHalf}>
                 {/* How many */}
                 <View style={ss.Who}>
-                    <Text style={ss.TextWhite}>Players</Text>
-                    <Text style={ss.TextWhite}>{player}v{player}</Text>
+                    <Text style={ss.TextWhite}>TEAMS</Text>
+                    <Text style={ss.Whotext}>{player}v{player}</Text>
                 </View>
                 {/* when */}
                 <View style={ss.When}>
-                    <Text style={ss.TextWhite}>{day} </Text>
+                    <Text style={ss.Whentext}>{day} </Text>
                     <Text style={ss.TextWhite}>{hour}:{min}</Text>
                 </View>
                 {/* Where */}
                 <View style={ss.Where}>
-                    <Text style={ss.TextWhite}>Turf</Text>
-                    <Text style={ss.TextWhite}>{location}</Text>
+                    <Text style={ss.TextWhite}>TURF</Text>
+                    <Text style={ss.Wheretext}>{location}</Text>
                 </View>
             </View>
 
@@ -52,7 +65,7 @@ export default function Post({item}){
                 </View>
 
                 {/* Join button */}
-                <JoinPost handleJoin={handleJoin} player={player}/>
+                <JoinPost handleJoin={handleJoin} player={player} isJoined={isJoined}/>
             </View>
         </View>
      )
@@ -62,8 +75,10 @@ const ss = StyleSheet.create({
     Post:{
         backgroundColor: "white",
         borderRadius: 30,
-        height:220,
-        marginBottom: 10,
+        height: 8*25,
+        marginLeft: 8*2,
+        marginRight: 8*2,
+        marginBottom: 8*3
     },
     UpperHalf: {
         flex:1,
@@ -73,25 +88,24 @@ const ss = StyleSheet.create({
 
         justifyContent:"space-evenly",
         
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        paddingLeft: 30,
-        paddingRight: 30,
+        borderTopLeftRadius: 8*3,
+        borderTopRightRadius:  8*3,
+        paddingLeft: 8*2,
+        paddingRight: 8*2,
     },
     LowerHalf: {
         flex:1,
         flexDirection: "row",
-        borderRadius: 30,
+        borderRadius:  8*3,
     },
     TextWhite:{
         color: "white",
+        fontSize: 8*2,
     },
     Who:{
         alignItems: "center",
         justifyContent: "center",
-
         // backgroundColor: "gray",
-        
     },
     When:{
         alignItems: "center",
@@ -136,6 +150,23 @@ const ss = StyleSheet.create({
         borderWidth:1,
         borderRadius: 10,
         borderColor: "white",
+    },
+    Whotext:{
+        color: "white",
+        fontSize: 8*4,
+        fontWeight: 900,
+        marginTop:-10,
+    },
+    Whentext: {
+        color: "white",
+        fontSize: 8*2,
+        fontWeight: 900,
+    },
+    Wheretext:{
+        color: "white",
+        fontSize: 8*2.5,
+        fontWeight: 900,
+        marginTop:-8,
     }
 })
 

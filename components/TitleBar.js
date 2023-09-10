@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
         width:50,
     },
     TitleContainer:{
-        flex:1,
+        flex:3,
         justifyContent: 'center',
         alignItems: 'center',
     },
     Title:{
         fontSize: 30,
-        color: Colors.PrimaryGreen
+        color: Colors.PrimaryGreen,
 
     }
     

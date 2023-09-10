@@ -1,4 +1,3 @@
-
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect } from 'react';
 import { Image, StyleSheet, Text,SafeAreaView, TouchableWithoutFeedback, View } from 'react-native';

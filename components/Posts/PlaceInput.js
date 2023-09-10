@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, StyleSheet, TextInput, View } from 'react-native';
 
 
 
@@ -7,13 +7,11 @@ export default function PlaceInput({post, setPost}){
 
 
     const handleChange = (place)=>{
-        console.log('place :>> ', place);
         setPost({
             player: post.player,
             dateTime: post.dateTime,
             location: place
         })
-        console.log('post :>> ', post);
     }
     return (
         <View style={ss.container}>

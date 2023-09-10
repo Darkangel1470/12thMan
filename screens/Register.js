@@ -22,6 +22,7 @@ export default function Signup({navigation}){
   const [isChecked, setChecked] = useState(false);
 
   var handleSignUp = () => {
+    setEmail(email.toLowerCase())
     console.log(email+" "+password)
     auth 
       .createUserWithEmailAndPassword(email, password)

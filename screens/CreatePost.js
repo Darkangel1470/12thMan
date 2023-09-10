@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import FormButton from '../components/Form/FormButton';
 import Colors from '../styles/Colors';
 import PostInput from '../components/Posts/PostInput';
@@ -18,7 +18,7 @@ export default function CreatePost(){
         location: ''
     })
 
-    const createPost =()=>{
+    const createPost =async ()=>{
         console.log("creating post: ",post)
         db.collection('posts').add({
             player: post.player,
@@ -27,6 +27,20 @@ export default function CreatePost(){
             timestamp: new Date(),
             hostid: auth.currentUser?.email
         })
+        .then(function(post) {
+            console.log("Document written with ID: ", post.id);
+            db.collection('players').add({
+                postid: post.id,
+                userid: auth.currentUser?.email,
+                ishost: true
+            }).catch((err) => {
+                console.error(err);
+            })
+        })
+        .catch(function(error) {
+            console.error("Error adding document: ", error);
+        });
+        // console.log('res.id :>> ', res.id);
     }
 
     const handleNext = () => {

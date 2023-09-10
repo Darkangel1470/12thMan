@@ -37,7 +37,7 @@ export default function Login({navigation}){
 				navigation.navigate('home')
 			}
 		})
-		return unsubscribe
+		return unsubscribe()
 	},[])
 
     // Remove default Header
@@ -46,9 +46,6 @@ export default function Login({navigation}){
         headerShown:false
       })
     },[])
-
-  
-  
     return(
         <SafeAreaView style={SafeViewAndroid.AndroidSafeArea}>
             {/* title Bar */}

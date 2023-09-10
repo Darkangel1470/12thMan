@@ -1,10 +1,18 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../styles/Colors';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 export default function Header(){
+
+    const navigation = useNavigation()
+
+    const handleChats = () => {
+        console.log('handle chats pressed')
+        navigation.navigate("chat");
+    }
     
     return (
         
@@ -12,10 +20,14 @@ export default function Header(){
             {/* Label */}
             <Text style={ss.label}>12Th Man</Text>
             {/* chatIcon */}
-            <Image
-                style={ss.chatIcon}
-                source={require("../assets/Images/ChatIcon.png")}
-            />
+            <Pressable
+                onPress={handleChats}
+            >
+                <Image
+                    style={ss.chatIcon}
+                    source={require("../assets/Images/ChatIcon.png")}
+                />
+            </Pressable>
 
         </View>
     )

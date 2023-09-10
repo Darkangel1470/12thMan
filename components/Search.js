@@ -21,7 +21,7 @@ export default function Search(){
 //style
 const ss = StyleSheet.create({
     Search: {
-        backgroundColor: "white",
+        backgroundColor: "rgba(255, 255, 255, 0.50)",
         borderRadius: 30,
         width: "100%",
         height: 50,

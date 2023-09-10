@@ -1,4 +1,5 @@
 import {View, Text, TextInput, StyleSheet} from "react-native"
+import Colors from "../../styles/Colors";
 
 
 export default function InputField({label , state, setState}){
@@ -21,13 +22,13 @@ export default function InputField({label , state, setState}){
 
   
   
-  const Colors = StyleSheet.create({
-    PrimaryBlack: "#001433",
-    PrimaryGreen: "#4DFF00",
-    SecondaryGray: "#A5ACAF",
-    SecondaryBlue: "#245998",
-    AccentWhite: "#FFFFFF",
-  })
+  // const Colors = StyleSheet.create({
+  //   PrimaryBlack: "#001433",
+  //   PrimaryGreen: "#4DFF00",
+  //   SecondaryGray: "#A5ACAF",
+  //   SecondaryBlue: "#245998",
+  //   AccentWhite: "#FFFFFF",
+  // })
   
   const styles = StyleSheet.create({
     body: {
@@ -38,13 +39,15 @@ export default function InputField({label , state, setState}){
     InputField: {
       height:72,
       width:"auto",
-      backgroundColor: Colors.SecondaryBlue,
+      backgroundColor: Colors.LightBlue,
       borderRadius:20,
       padding: 10,
       paddingLeft: 20,
     },
     InputLabel: {
-      color: Colors.PrimaryBlack
+      color: Colors.PrimaryBlack,
+      fontSize: 8*2,
+      fontWeight: 100*7,
       
   
   
