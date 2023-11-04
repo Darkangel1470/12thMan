@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View,Image, StyleSheet, Pressable, Text, ScrollView } from 'react-native';
+import { View,Image, StyleSheet, Pressable, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../styles/Colors';
 import { auth, db } from '../FirebaseConfig';
@@ -9,17 +9,17 @@ import PlayersSection from '../components/Posts/PlayersSection';
 import LocationSection from '../components/Posts/LocationSection';
 
 
-
-
 export default function PostDetails({}){
     //variables
     const route = useRoute()
     const navigation = useNavigation()
 
     //states
+    const [mounted, setMounted] = useState(true)
     const [post, setPost] = useState()
     const [isJoined, setIsJoined] = useState(false)
     const [isHost, setIsHost] = useState(false)
+    const [playerJoined, setPlayerJoined] = useState(0);
 
     useLayoutEffect(()=>{
         navigation.setOptions({
@@ -38,27 +38,38 @@ export default function PostDetails({}){
             })
         
         //get is joined and isHost
-        db.collection('players')
-        .where('userid','==',auth.currentUser?.email)
-        .where('postid','==',route.params.pid)
-        .get().then(ss=>{
-            ss.forEach(doc=>{
-                console.log('players :>> ', doc.data().ishost);
-                setIsHost(doc.data().ishost);
-                setIsJoined(true)
+        const sub = db.collection('players')
+            .where('userid','==',auth.currentUser?.email)
+            .where('postid','==',route.params.pid)
+        sub.onSnapshot(ss=>{
+                ss.forEach(doc=>{
+                    console.log('players :>> ', doc.data().ishost);
+                    setIsHost(doc.data().ishost);
+                    setIsJoined(true)
+                })
             })
-        })
-        return () => {}
-
     },[])
+    
+    useEffect(()=>{if(mounted){//fetch players joined
+        const sub = db.collection('players').where('postid','==',route.params.pid)
+        sub.onSnapshot(ss=>{
+            var pids = ss.docs.map(doc => doc.id);
+            setPlayerJoined(pids.length);
+        })
+    }},[mounted]);
 
     const handleJoin = ()=>{
-        //check if joined:
+        console.log('post.player :>> ', post.player);
+        if(playerJoined==(post.player*2)){
+            Alert.alert('Post Full','Maximum players have joined, please join another match or create another match');
+        }else{
+            //check if joined:
             db.collection('players').add({
                 postid: route.params.pid,
                 userid: auth.currentUser?.email,
                 ishost: false,
             })
+        }
     }
     const handleLeave = () => {
         if(isHost){
@@ -100,23 +111,32 @@ export default function PostDetails({}){
                     </View>
                     <View style={ss.body}>
                         {/* join button */}
-                        {!isJoined? 
-                        <View style={ss.joinSection}>
-                            <Pressable style={ss.Join} onPress={handleJoin}>
-                                <Text style={ss.JoinText}>Join  </Text>
-                                <View style={ss.JoinNum}>
-                                    <Text style={ss.Status}> 5/{player*2} </Text>
-                                </View>
-                            </Pressable>
-                        </View> : 
+                        {isJoined? 
                         <View style={ss.joinSection}>
                             <Pressable style={[ss.Join, ss.Leave]} onPress={handleLeave}>
                                 <Text style={ss.JoinText}> Leave </Text>
                                 <View style={ss.JoinNum}>
-                                    <Text style={ss.Status}> 5/{player*2} </Text>
+                                    <Text style={ss.Status}> {playerJoined}/{player*2} </Text>
                                 </View>
                             </Pressable>
-                        </View> 
+                        </View>
+                        :playerJoined!=(player*2)
+                        ?<View style={ss.joinSection}>
+                            <Pressable style={ss.Join} onPress={handleJoin}>
+                                <Text style={ss.JoinText}>Join  </Text>
+                                <View style={ss.JoinNum}>
+                                    <Text style={ss.Status}> {playerJoined}/{player*2} </Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                        :<View style={ss.joinSection}>
+                            <Pressable style={[ss.Join, ss.Full]} onPress={()=>{}}>
+                                <Text style={ss.JoinText}> Full </Text>
+                                <View style={ss.JoinNum}>
+                                    <Text style={ss.Status}> {playerJoined}/{player*2} </Text>
+                                </View>
+                            </Pressable>
+                        </View>
                         }
                         {/* details section */}
                         <DetailsSection post={post} />
@@ -137,7 +157,6 @@ const ss = StyleSheet.create({
     },
     turfImage:{
         height: 200,
-
     },
     backbtn:{
         position: 'absolute',
@@ -148,7 +167,6 @@ const ss = StyleSheet.create({
         width: 50,
         height: 50,
         zIndex: 1,
-
     },
     backImage:{
     },
@@ -157,7 +175,6 @@ const ss = StyleSheet.create({
         justifyContent:'flex-end',
         // paddingRight: 10,
         borderColor: 'white',
-
     },
     Join:{
         flexDirection: "row",
@@ -172,6 +189,9 @@ const ss = StyleSheet.create({
     },
     Leave:{
         backgroundColor: 'red',
+    },    
+    Full:{
+        backgroundColor: Colors.PrimaryGray,
     },
     JoinText:{
         color: Colors.PrimaryBlack,
@@ -186,7 +206,6 @@ const ss = StyleSheet.create({
         borderColor: "white",
         justifyContent: 'center',
         alignItems: 'center',
-
     },
     Status:{
         fontSize: 8*2,

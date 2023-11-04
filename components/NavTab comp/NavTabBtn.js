@@ -16,6 +16,9 @@ export default function NavTabBtn({type, label }){
             sauce = require("../../assets/Images/NavTabIcons/HomeIcon.png")
             break;
         case "search":
+            handlePress= ()=>{
+                navigation.navigate('search');
+            }
             sauce = require("../../assets/Images/NavTabIcons/SearchIcon.png")
             break;
         case "create":

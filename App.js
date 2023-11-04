@@ -17,6 +17,9 @@ import CreateClub from './screens/CreateClub';
 import ClubDetails from './screens/ClubDetails';
 import Chat from './screens/Chat';
 import PersonalChat from './screens/PersonalChat';
+import MapInput from './components/Posts/MapInput';
+import FriendList from './screens/FriendList';
+import Search from './screens/Search';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -35,7 +38,9 @@ export default function App() {
         <Stack.Screen name="clubdetails" component={ClubDetails}  />
         <Stack.Screen name="chat" component={Chat}  />
         <Stack.Screen name="personalchat" component={PersonalChat}  />
-
+        <Stack.Screen name="mapinput" component={MapInput}  />
+        <Stack.Screen name="friendlist" component={FriendList}  />
+        <Stack.Screen name="search" component={Search}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

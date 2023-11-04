@@ -6,14 +6,13 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function Header(){
-
+    //variable
     const navigation = useNavigation()
-
+    //functions
     const handleChats = () => {
         console.log('handle chats pressed')
         navigation.navigate("chat");
     }
-    
     return (
         
         <View style={ss.header}>

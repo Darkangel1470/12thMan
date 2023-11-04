@@ -43,10 +43,10 @@ export default function CreateClub(){
             .update({ 
                 club: club?.id,
             })
+            navigation.navigate('clubdetails',{cid: club.id});
         }).catch((err)=>{
             console.error(err);
         })
-        navigation.navigate('clubdetails',{cid: club.id});
     }
 
     return (
@@ -116,12 +116,3 @@ const ss = StyleSheet.create({
         height: 8*6
     }
 })
-
-
-
-/*
-28th 6
-
-
-
-*/

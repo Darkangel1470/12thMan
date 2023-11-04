@@ -1,22 +1,22 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { auth } from '../../FirebaseConfig';
 
-export default function Player({item}){
+export default function Player({item}){if(!item) return;
+    // variable
     const navigation = useNavigation();
-    useEffect(()=>{
-        // console.log('player :>> ', item);
-    })
-    
+    const name = item.email;
+    // functions
     const handlePress = ()=>{
-        // console.log('item.userid :>> ', item.email);
+        console.log('profile of :>> ', item.email);
         navigation.navigate("profile",{
             email: item.email
         })        
     }
     return (
         <Pressable style={ss.Container} onPress={handlePress}>
-            <View style={ss.Image}><Text>t</Text></View>
+            <View style={ss.Image}><Text style={ss.imageText}>{name[0].toUpperCase()}</Text></View>
             <View>
                 <Text style={ss.Name}>{item.fname}</Text>
                 <Text style={ss.Host}>{item.ishost? "Host":null}</Text>
@@ -42,6 +42,12 @@ const ss = StyleSheet.create({
         borderRadius: 3,
         backgroundColor: 'gray',
         marginRight: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageText:{
+        fontSize: 8*3,
+        fontWeight: 100*9,
     },
     Name: {
         color: 'black',

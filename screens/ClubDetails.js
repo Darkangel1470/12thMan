@@ -9,15 +9,12 @@ import { FieldValue, auth, db } from '../FirebaseConfig';
 import Player from '../components/Posts/Player';
 import NavTab from '../components/NavTab comp/NavTab';
 function CDDetailsSection({club,isJoined, forceUpdate}) {
-
     if(!club){return;}
     const navigation = useNavigation()
-
     //conditional rendering states
     const [showSettings, setShowSettings] = useState(false)
     const handleJoin = ()=>{
         if(!isJoined){
-
             db.collection('clubmembers').add({
             clubid: club?.cid,
                 userid: auth.currentUser?.email,
@@ -32,6 +29,7 @@ function CDDetailsSection({club,isJoined, forceUpdate}) {
             forceUpdate();
         }else{
             console.log('already joined')
+            navigation.navigate('chat')
         }
     }
     const handleSetting = ()=>{
@@ -94,8 +92,7 @@ function CDDetailsSection({club,isJoined, forceUpdate}) {
                             <Text>Leave</Text>
                         </Pressable>
                     </View>
-                }
-                
+                }      
             </View>
             {/* BIO */}
             <View>
@@ -130,7 +127,6 @@ function ClubMemberList({clubid, forceUpdate, ignore}){
         const sub = db.collection('clubmembers').where('clubid','==',clubid)
         sub.onSnapshot(ss=>{
             ss.forEach(doc=>{
-                // console.log('doc.data() :>> ', doc.data());
                 var dummy = clubmemberlist;
                 dummy.push(doc.data())
                 setclubmemberlist(dummy)
@@ -143,17 +139,12 @@ function ClubMemberList({clubid, forceUpdate, ignore}){
         // fetch list of users for uid
         var users = []
         clubmemberlist.forEach(item=>{
-            // console.log('item :>> ', item);
             db.collection('users').where('email','==',item.userid)
             .get().then((ss)=>{
                 ss.forEach(doc=>{
-                    // console.log('user:>> ', doc.data());
                     users.push(doc.data());
                 })
                 setMemberList(users);
-                // console.log('MemberList :>> ', memberList);
-                // console.log('done fetching user')
-                
             })
             return;
         })
@@ -165,12 +156,7 @@ function ClubMemberList({clubid, forceUpdate, ignore}){
         fetchUsers()
     },[clfetched,ignore])
     return (
-        <View>
-            {/* Table header */}
-            
-            {/* Separator */}
-            {/* Member list */}
-                {/* Member */}
+        <View style={mlss.cml}>
                 <FlatList 
                     style={mlss.flatlist}
                     data={memberList}
@@ -181,10 +167,6 @@ function ClubMemberList({clubid, forceUpdate, ignore}){
                         />
                     )}
                 />
-            
-                    {/* Name */}
-                    {/* Post */}
-                    {/* Matches */}
         </View>
     )
 }
@@ -308,6 +290,9 @@ const dsss = StyleSheet.create({
 const mlss= StyleSheet.create({
     flatlist:{
         padding: 8,
+    },
+    cml:{
+        paddingBottom: 8*9,
     }
 })
 const ss = StyleSheet.create({

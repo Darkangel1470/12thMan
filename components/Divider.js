@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 
+
 export default function Divider() {
     return (
         <LinearGradient
@@ -16,7 +17,6 @@ export default function Divider() {
 
     )
 }
-
 const styles = StyleSheet.create({
   	divider: {
         height: "100%",

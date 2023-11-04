@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { auth, db } from '../../FirebaseConfig';
@@ -9,7 +10,7 @@ export default function ChatInput({receiverid}) {
     const timestamp = new Date();
     useEffect(() => {
         console.log('receiverid while seding :>> ', receiverid);
-    })
+    },[receiverid])
     
     const handlePress = ()=>{
 
@@ -17,12 +18,17 @@ export default function ChatInput({receiverid}) {
         console.log('senderid :>> ', senderid);
         console.log('receiverid :>> ', receiverid);
         console.log('timestamp :>> ', timestamp);
-        db.collection('chat').add({
-            senderid: senderid,
-            receiverid: receiverid,
-            text: text,
-            timestamp: timestamp,
-        })
+        try{
+            db.collection('chat').add({
+                senderid: senderid,
+                receiverid: receiverid,
+                text: text,
+                timestamp: timestamp,
+            })
+        }catch(err){
+            console.log('err :>> ', err);
+            handlePress();
+        }
 
         setText('');
     }

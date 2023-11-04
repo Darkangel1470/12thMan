@@ -18,7 +18,7 @@ export default function TitleBar({navigation}) {
             </View>
             {/* title */}
             <View style={styles.TitleContainer}>
-                <Text style={styles.Title}>Header</Text>
+                <Text style={styles.Title}>12Th Man</Text>
             </View>  
             {/* Blank Box to fill empty space  */}
             <View style={styles.BackBtn}>

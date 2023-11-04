@@ -11,13 +11,16 @@ import { auth, db } from '../FirebaseConfig';
 import Settings from '../components/Profile/Settings';
 
 
-function Stats({pids, hpids}){
+function Stats({pids, hpids, userid}){
+
+    //variable
+    const navigation = useNavigation();
 
     //States
     const [mounted, setMounted]= useState(true);
-    const [matches, setMatches] = useState(pids.length);
-    const [friends, setFriends] = useState(hpids.length);
-    const [hosted, setHosted] = useState(2);
+    const [matches, setMatches] = useState(pids.length||0);
+    const [friends, setFriends] = useState(0);
+    const [hosted, setHosted] = useState(hpids.length||0);
 
     //components
     const Stat = ({number, label})=>{
@@ -32,15 +35,25 @@ function Stats({pids, hpids}){
     }
 
     //Auto compute
-    useEffect(() => {if(mounted){
-
+    useEffect(() => {if(mounted){//fetching friends
+        const sub = db.collection('users').doc(userid)
+        sub.onSnapshot(doc=>{
+            var friendArray = []
+            if(doc.data().friendlist){
+                friendArray = doc.data().friendlist
+            }
+            setFriends(friendArray.length);
+        })
     }},[mounted]);
+
     return (
         <View style={sss.stats}>
             {/* Matches */}
             <Stat number={matches} label={'Matches'}/>
             {/* Friends */}
-            <Stat number={friends} label={'Friends'}/>
+            <Pressable onPress={()=> navigation.navigate('friendlist',{userid:userid})}>
+                <Stat number={friends} label={'Friends'}/>
+            </Pressable>
             {/* Hosted */}
             <Stat number={hosted} label={'Hosted'}/>
         </View>
@@ -51,16 +64,22 @@ export default function Profile(){
     const navigation = useNavigation()
     const route = useRoute()
     const userid = route.params?.email || auth.currentUser?.email;
+    // console.log('userid :>> ', userid);
 
     //states
+    // const [userid, setUserid] = useState(route.params?.email || auth.currentUser?.email);
     const [showSettings, setShowSettings] = useState(false);
     const [profile, setProfile] = useState();
+    const [pidsFetched, setPidsFetched] = useState(false);
     const [pids, setPids] = useState();
+    const [dataFetched, setDataFetched] = useState(false);
     const [hpids, setHpids] = useState();
     const [posts, setPosts] = useState();
     const [mount, setMount] = useState(true);
     const [postFetched, setPostFetched] = useState(false)
     const [isMyProfile, setIsMyProfile] = useState(true)
+    const [friendreqsend, setFreindreqSent] = useState(false);
+    const [isFriend, setIsFriend] = useState(false)
     useLayoutEffect(()=>{
         navigation.setOptions({
             headerShown:false
@@ -68,46 +87,115 @@ export default function Profile(){
     })
     //function
     function fetchUserData(){
-        // console.log('userid ||  :>> ', route.params.userid );
-        db.collection('users').doc(userid)
-        .get().then(doc=>{
-            // console.log('profile data :>> ', doc.data());
+        db.collection('users').doc(userid).get().then(doc=>{
             setProfile(doc.data())
         })
     }
     function fetchPids(){
         var postids = [];
-        db.collection('players').where('userid','==',userid)
-        .get().then(ss=>{
-            ss.forEach(doc=>{
-                // console.log('players :>> ', doc.data());
-                postids.push(doc.data().postid)
+        const sub = db.collection('players').where('userid','==',userid)
+        sub.onSnapshot(ss=>{
+            var hidArray = [];
+            var pidArray = ss.docs.map((doc)=>{
+                if(doc.data().ishost){
+                    hidArray.push(doc.data().postid)
+                }
+                return doc.data().postid
             })
-            // console.log('postids :>> ', postids);
-            setPids(postids);
+            console.log('hidArray :>> ', hidArray);
+            setHpids(hidArray.length);
+            console.log('hpids :>> ', hpids);
+            setPids(pidArray);
+            setPostFetched(true)
         })
     }
     function fetchPost(){
         var postArr = []
-        var hostedPost = []
         pids.forEach(pid=>{
             db.collection('posts').doc(pid).get().then(doc=>{
                 if(doc.exists){
-                    if(doc.data().hosted==auth.currentUser?.email){
-                        hostedPost.push(doc.id);
-                    }
                     postArr.push({...doc.data(), pid: pid})
                 }
                 // console.log('postArr :>> ', postArr);
                 setPosts(postArr);
-                setHpids(hostedPost);
             })
         })
     }
     function checkMyPage(){
+        console.log('checking if my page');
+        setIsMyProfile(userid==auth.currentUser?.email);
         if(userid!=auth.currentUser?.email){
-            setIsMyProfile(false);
+            fetchFriendStatus()
         }
+    }
+    function fetchFriendStatus(){
+
+        //is friend req sent
+        var sender = auth.currentUser?.email;
+        var receiver = userid;
+        const sub = db.collection('friendrequests').doc(sender+receiver)
+        sub.onSnapshot(doc =>{
+            setFreindreqSent(doc.exists);
+        })
+        const sub2 = db.collection('users').doc(auth.currentUser?.email)
+        sub2.onSnapshot(doc=>{
+            var frnds = doc.data().friendlist || [];
+            var isfriend = frnds.includes(userid);
+            setIsFriend(frnds.includes(userid));
+        })
+    }
+    const handleSettings = ()=>{
+        setShowSettings(true);
+    }
+    const handleAddFriend = ()=>{
+        var sender = auth.currentUser?.email;
+        var receiver = userid;
+        if(isFriend){
+            console.log('unfriending')
+            //remove user b from user a friendlist
+            db.collection('users').doc(auth.currentUser?.email)
+            .get().then(doc=>{
+                var frnd = doc.data().friendlist;
+                const index = frnd.indexOf(userid);
+                if(index > -1){
+                    frnd.splice(index, 1);
+                }
+                doc.ref.update({
+                    friendlist: frnd
+                })
+            })
+            
+            //remove user a from user b friendlist
+            db.collection('users').doc(userid)
+            .get().then(doc=>{
+                console.log('doc.data().friendlist :>> ', doc.data().friendlist);
+                var frnd = doc.data().friendlist;
+                const index = frnd.indexOf(auth.currentUser?.email);
+                if(index > -1){
+                    frnd.splice(index, 1);
+                }
+                doc.ref.update({
+                    friendlist: frnd
+                })
+            })
+
+
+
+        }else if(friendreqsend){
+            console.log('unsending request ');
+
+        }else {
+            db.collection('friendrequests').doc(sender+receiver).set({
+                sender: sender,
+                receiver: receiver,
+            })
+            console.log('Friend Request sent');
+        }
+    }
+    const handleMessage = () =>{    
+        navigation.navigate('personalchat',{
+            userid: userid
+        })
     }
     
     //automated functions
@@ -115,31 +203,19 @@ export default function Profile(){
         fetchUserData();
         fetchPids();
         checkMyPage();
-    }},[mount])
+    }},[mount,userid])
 
     //run after fetching pids
     useEffect(()=>{if(pids){
-        // console.log('pids :>> ', pids);
+        console.log('pids :>> ', pids);
         fetchPost()
-    }},[pids])
+    }},[pids, userid])
 
     //run after fetching post data
     useEffect(()=>{if(posts){
         setPostFetched(true);
-
     }},[posts]);
 
-    // functions
-    const handleSettings = ()=>{
-        setShowSettings(true);
-    }
-    const handleAddFriend = ()=>{}
-    const handleMessage = () =>{    
-        navigation.navigate('personalchat',{
-            userid: userid
-        })
-
-    }
     return (  
         <SafeAreaView >
             <ScrollView style={ss.Container}>
@@ -156,25 +232,31 @@ export default function Profile(){
                     </View>
                 </View>
                 {/* state */}
-                {pids && hpids &&
-                    <Stats  pids={pids} hpids={hpids}/>
+                {postFetched 
+                    ?<Stats  pids={pids} hpids={hpids} userid={userid}/>:null
                 }
                 {/* Buttons */}
-                {!isMyProfile &&
-                    <View style={ss.Buttons}>
-                        <Pressable 
-                            style={ss.addFriend}
-                            onPress={handleAddFriend}
-                        >
-                            <Text style={ss.addText}>Add friend</Text>
-                        </Pressable>
-                        <Pressable 
-                            style={ss.message}
-                            onPress={handleMessage}
-                        >
-                            <Text style={ss.messageText}>Message</Text>
-                        </Pressable>
-                    </View>
+                {!isMyProfile 
+                    ?<View style={ss.Buttons}>
+                            <Pressable 
+                                style={[ss.addFriend, isFriend && ss.message]}
+                                onPress={handleAddFriend}
+                            >
+                                {isFriend
+                                    ?<Text style={ss.messageText}>Unfriend</Text>
+                                    :friendreqsend
+                                        ?<Text style={ss.addText}>Sent</Text>
+                                        :<Text style={ss.addText}>Add friend</Text>
+                                }
+                            </Pressable>
+                            <Pressable 
+                                style={ss.message}
+                                onPress={handleMessage}
+                            >
+                                <Text style={ss.messageText}>Message</Text>
+                            </Pressable>
+                        </View>
+                    :null
                 }
                 {/* Settings icon */}
                 <View style={ss.Settings}>                         
@@ -190,24 +272,26 @@ export default function Profile(){
                 {/* body */}
                 <View style={ss.PostContainer}>
                     {/* matches played */}
-                    <FlatList                    
-                        data={posts}
-                        renderItem={({item})=>(
-                            <ScorePost item={item} />
-                        )}
-                    />
+                    <ScrollView horizontal={true} style={ss.hor}>
+                        <FlatList 
+                            data={posts}
+                            style={ss.postlist}
+                            renderItem={({item})=>(
+                                <ScorePost item={item}/>
+                            )}
+                        />
+                    </ScrollView>
                 </View>
-                {/* nav Tab */}
             </ScrollView>
-            {/* <View style={ss.NavTabContainer}> */}
-                <NavTab />
-            {/* </View> */}
+            {/* nav Tab */}
+            <NavTab />
             {/* SettingsPanel */}
             {showSettings
                 ?<View style={ss.SettingsContainer}>
                     <Settings />
                 </View>
-                :null}
+                :null
+            }
         </SafeAreaView>
     )
 }
@@ -264,8 +348,8 @@ const ss = StyleSheet.create({
         borderTopLeftRadius:8*5,
         borderTopRightRadius:8*5,
         paddingTop:8*3,
-        paddingLeft: 8*2,
-        paddingRight: 8*2,
+        paddingLeft: 8*0,
+        paddingRight: 8*0,
         paddingBottom: 80,
     },
     Settings:{
@@ -315,9 +399,15 @@ const ss = StyleSheet.create({
     messageText:{
         fontSize: 8*2,
         fontWeight: 100*9,
-        
+    },
+    hor:{
+        marginLeft: 8*2.5,
+        marginRight: 8*1,
+        width: screen.width-8*5,
+        // backgroundColor: 'yellow',
+    },
+    postlist:{  
+        // backgroundColor: 'pink',
+        width: screen.width-8*5//20 for left right padding
     }
-
-
-
 })

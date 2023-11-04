@@ -1,31 +1,42 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, Touchable, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Colors from '../../styles/Colors';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import TimeInput from './TimeInput.js';
-import PlaceInput from './PlaceInput';
 import NumberInput from './NumberInput';
+import PlaceInput from './PlaceInput';
+import MapInput from './MapInput';
 // remove number please npm
+
 
 
 
 export default function PostInput({page,post,setPost}){
     return (
-        <View style={ss.container}>
+        page==2
+        ?<View style={[ss.mapContainer]}>
+            <MapInput post={post} setPost={setPost} />
+        </View>
+        :<View style={ss.container}>
             {page==0
                 ? <NumberInput post={post} setPost={setPost} />
                 : page==1
-                    ? <TimeInput post={post} setPost={setPost} />
-                    : <PlaceInput post={post} setPost={setPost} />
+                    ?<TimeInput post={post} setPost={setPost} /> 
+                    :<MapInput post={post} setPost={setPost} />              
             }
         </View>
+        
     )
 }
 const ss = StyleSheet.create({
     container:{
         backgroundColor:'white',
         
+    },
+    mapContainer:{
+        position:'absolute',
+        height: '100%',
+        width: '100%',
+        zIndex: -3,
     },
     NumberInput:{
         position: 'absolute',

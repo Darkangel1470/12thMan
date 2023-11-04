@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Checkbox from 'expo-checkbox';
 
@@ -13,13 +12,11 @@ import FormButton from '../components/Form/FormButton';
 import TitleBar from '../components/TitleBar';
 import { auth } from '../FirebaseConfig';
 
-
 export default function Login({navigation}){
 
   const [email, setEmail] = useState('a@gmail.com')
   const [password, setPassword] = useState('123456')
   const [isChecked, setChecked] = useState(false);
-
 	const handleLogIn = () => {
 		auth
 			.signInWithEmailAndPassword(email,password)
@@ -30,7 +27,6 @@ export default function Login({navigation}){
 			})
 			.catch(err => alert(err.message));
 	}
-
 	useEffect(()=>{
 		const unsubscribe = auth.onAuthStateChanged(user =>{
 			if(user){
@@ -78,9 +74,6 @@ export default function Login({navigation}){
                   </View>
               </View>
 
-
-
-
               {/* Form Buttons */}
               <View style={styles.Buttons}>
                 <FormButton title="Login" type="Primary" onpress={handleLogIn}/>
@@ -90,10 +83,6 @@ export default function Login({navigation}){
         </SafeAreaView>
     );
   }
-  
-
-
-// 
 
 const styles = StyleSheet.create({
   Body: {
@@ -117,15 +106,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 })
-
-
-
-/*
-
-Make the checkbox work
-placements
-reduce go back logo size
-signup functionality
-
-
-*/

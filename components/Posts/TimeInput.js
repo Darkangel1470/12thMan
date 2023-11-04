@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, Pressable, View } from 'react-native';
+import { Image, StyleSheet, Text, Pressable, View, Alert } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Colors from '../../styles/Colors';
 
 
 function DInput({post, setPost}){
-
+    
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    console.log("post.dateTime :>> " , post.dateTime);
-    console.log('post.dateTime :>> ', post.dateTime.getHours());
     const handleConfirm = (date)=>{
-        setPost({
-            player: post.player,
-            dateTime: date,
-            location: post.location
-        })
+        var today = new Date()
+        console.log('today>date :>> ', today<date);
+        if(today>date){
+            Alert.alert('Incorrect Time',"Time cant be past time")
+        }else{
+            console.log('date :>> ', date);
+            var dt = post.dateTime
+            dt.setMonth(date.getMonth())
+            dt.setDate(date.getDate())
+            dt.setFullYear(date.getFullYear())
+            console.log('dt :>> ', dt);
+            setPost({
+                player: post.player,
+                dateTime: dt,
+                location: post.location
+            })
+        }
         setDatePickerVisibility(false)
     }
-
     return (
         <View style={dtss.date}>
             {/* Date logo */} 
@@ -27,10 +35,11 @@ function DInput({post, setPost}){
             />
             {/* Date Picker */} 
             <Pressable onPress={() => setDatePickerVisibility(true)} style={dtss.input}>
-                <Text style={dtss.text} >{post.dateTime.getDate()+"/"+post.dateTime.getMonth()+"/"+post.dateTime.getFullYear()}</Text>
+                <Text style={dtss.text} >{post.dateTime.getDate()+"/"+(post.dateTime.getMonth()+1)+"/"+post.dateTime.getFullYear()}</Text>
             </Pressable>
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
+                isDarkModeEnabled={true}
                 mode="date"
                 onConfirm={handleConfirm}
                 onCancel={()=>{setDatePickerVisibility(false)}}
@@ -38,17 +47,24 @@ function DInput({post, setPost}){
         </View>
     )
 }
-
 function TInput({post, setPost}){
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    console.log("post.dateTime :>> " , post.dateTime);
-    console.log('post.dateTime :>> ', post.dateTime.getHours());
     const handleConfirm = (date)=>{
-        setPost({
-            player: post.player,
-            dateTime: date,
-            location: post.location
-        })
+        var today = new Date()
+        console.log('today>date :>> ', today<date);
+        if(today>date){
+            Alert.alert('Incorrect Time',"Time cant be past time")
+        }else{
+            var dt = post.dateTime
+            dt.setHours(date.getHours())
+            dt.setMinutes(date.getMinutes())
+            dt.setSeconds(date.getSeconds())
+            setPost({
+                player: post.player,
+                dateTime: dt,
+                location: post.location
+            })
+        }
         setDatePickerVisibility(false)
     }
     var isPast12 = post.dateTime.getHours() > 12;

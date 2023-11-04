@@ -4,7 +4,8 @@ import Colors from "../../styles/Colors";
 import Font from "../../styles/Font";
 import { useNavigation } from '@react-navigation/native';
 import JoinPost from "./JoinPost";
-import { auth } from "../../FirebaseConfig";
+import { auth, db } from "../../FirebaseConfig";
+import { screen } from "../../styles/SafeViewAndroid";
 
 export default function Post({item}){
 
@@ -12,26 +13,41 @@ export default function Post({item}){
     const navigation = useNavigation()
     const days = ['SUN','MON','TUE','WED','THU','FRI','SAT']
     var player,day,hour,min,location,dt;
+    // Process Details for presentation
+    player = item.player;
+    location = item.location;
+    dt = new Date(item.DateTime?.seconds*1000)
+    day = days[dt.getDay()];hour = dt.getHours();min = dt.getMinutes();min = min>9? min: "0"+min;
 
     //states
     const [mounted, setMounted] = useState(true);
     const [isJoined, setIsJoined] = useState(false)
+    const [playerJoined, setPlayerJoined] = useState(0);
 
     // functions
     const handleJoin = () => {
         navigation.navigate('postdetails',{ pid: item.pid})
     }
-    useEffect(()=>{if(mounted){
-        if(auth.currentUser?.email==item.hostid){
-            setIsJoined(true)
-        }
+
+    //useEffect
+    useEffect(()=>{if(mounted){//fetch if player has joined
+        const sub = db.collection('players').where('postid','==',item.pid).where('userid','==',auth.currentUser?.email)
+        sub.onSnapshot((ss)=>{
+            ss.docs.map(doc=>{
+                // console.log('doc.data() :>> ', doc.data());
+                setIsJoined(doc.exists);
+
+            })
+        })
     }},[mounted]);
 
-    // Process Details for presentation
-    player = item.player;
-    location = item.location;
-    dt = new Date(item.DateTime.seconds*1000)
-    day = days[dt.getDay()];hour = dt.getHours();min = dt.getMinutes();min = min>9? min: "0"+min;
+    useEffect(()=>{if(mounted){//fetch players joined
+        const sub = db.collection('players').where('postid','==',item.pid)
+        sub.onSnapshot(ss=>{
+            var pids = ss.docs.map(doc => doc.id);
+            setPlayerJoined(pids.length);
+        })
+    }},[mounted]);
 
     return (
         <View style={ss.Post}>
@@ -47,25 +63,19 @@ export default function Post({item}){
                     <Text style={ss.Whentext}>{day} </Text>
                     <Text style={ss.TextWhite}>{hour}:{min}</Text>
                 </View>
-                {/* Where */}
-                <View style={ss.Where}>
-                    <Text style={ss.TextWhite}>TURF</Text>
-                    <Text style={ss.Wheretext}>{location}</Text>
-                </View>
             </View>
 
             {/* Lower half */}
             <View style={ss.LowerHalf}>
                 {/* club logo */}
-                <View style={ss.Logo}>
-                    {/* <Image
-                        source={require("../../assets/team1.jpg")}
-                    /> */}
-                    <Text>logo - logo</Text>
+                {/* Where */}
+                <View style={ss.Where}>
+                    <Text style={ss.TextBlack}>LOCAL</Text>
+                    <Text style={ss.Wheretext}>{location?.title}</Text>
                 </View>
 
                 {/* Join button */}
-                <JoinPost handleJoin={handleJoin} player={player} isJoined={isJoined}/>
+                <JoinPost handleJoin={handleJoin} player={player} isJoined={isJoined} playerJoined={playerJoined}/>
             </View>
         </View>
      )
@@ -76,9 +86,10 @@ const ss = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 30,
         height: 8*25,
-        marginLeft: 8*2,
-        marginRight: 8*2,
-        marginBottom: 8*3
+        marginLeft: 8*0,
+        marginRight: 8*0,
+        marginBottom: 8*2,
+        width: screen.width-40
     },
     UpperHalf: {
         flex:1,
@@ -97,6 +108,7 @@ const ss = StyleSheet.create({
         flex:1,
         flexDirection: "row",
         borderRadius:  8*3,
+    
     },
     TextWhite:{
         color: "white",
@@ -127,6 +139,7 @@ const ss = StyleSheet.create({
         justifyContent: "center",
 
         // backgroundColor: "gray",
+        flex: 1,
         
     },
     Logo:{
@@ -162,30 +175,13 @@ const ss = StyleSheet.create({
         fontSize: 8*2,
         fontWeight: 900,
     },
+    TextBlack:{
+        color: 'black',
+    },
     Wheretext:{
-        color: "white",
+        color: "black",
         fontSize: 8*2.5,
         fontWeight: 900,
         marginTop:-8,
     }
 })
-
-
-
-
-
-
-/*
-
-
-justifyContent
-
-
-alignSelf
-
-
-alignContent
-
-alignItems: Horizontally aligned Texts 
-
-*/

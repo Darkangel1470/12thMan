@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { TextInput } from 'react-native';
-import { Image, StyleSheet, View } from 'react-native';
+import React from "react";
+import { Image, TextInput } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-export default function SearchBar({search, setSearch}){
-    // const [search, setSearch] = useState()
-
+export default function SearchBar({search, setSearch, style, handleSubmit}){
 
     return (
         <View style={ss.Container}>
@@ -14,10 +12,11 @@ export default function SearchBar({search, setSearch}){
             />
             {/* Input */}
             <TextInput 
-                style={ss.input}
+                style={[ss.input, style?.txtinput]}
                 value={search}
                 onChangeText={setSearch}
                 placeholder='Search'
+                onSubmitEditing={handleSubmit}
             />
         </View>
     )
@@ -25,7 +24,7 @@ export default function SearchBar({search, setSearch}){
 
 const ss = StyleSheet.create({
     Container:{
-        backgroundColor:"#667285",
+        backgroundColor:"white",
         height: 8*7,
         borderRadius: 8*8,
         alignItems: 'center',
@@ -36,5 +35,7 @@ const ss = StyleSheet.create({
     input:{
         marginLeft: 8*2,
         width: "80%",
+        fontSize: 8*3,
+        
     }
 })

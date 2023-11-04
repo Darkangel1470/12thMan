@@ -11,12 +11,11 @@ export default function JoinedMatches(){
     const [players, setPlayers] =useState([]);
     const [mount, setMount] = useState(true);
 
-
     useEffect(() => {if(mount)
         console.log('loading pids')
-        db.collection('players')
-        .where('userid','==',auth.currentUser?.email).get()
-        .then(snapshot => {
+        const sub = db.collection('players')
+        .where('userid','==',auth.currentUser?.email)
+        sub.onSnapshot(snapshot => {
             var players =[]
             snapshot.forEach(doc => {
                 players.push({...doc.data(),pid: doc.id})
@@ -39,20 +38,25 @@ export default function JoinedMatches(){
             })
         })        
     }},[players])
-    
-
 
     return (
-        <View style={{padding: 10}}>
-            <Text style={ss.Header}>Joined Posts</Text>
-            <FlatList
-                data={posts}
-                horizontal={true}
-                renderItem={({item}) => (
-                    <Post item={item}/>
-                )}
-            />
-        </View>
+        <>
+            {posts.length?
+                <View style={{padding: 0}}>
+                    <Text style={ss.Header}>Joined Posts</Text>
+                    <FlatList
+                        data={posts}
+                        horizontal={true}
+                        style={ss.postlist}
+                        renderItem={({item}) => (
+                            <View style={{marginLeft:10, marginRight:10}}>
+                                <Post item={item}/>
+                            </View>
+                        )}
+                    />
+             </View>
+            :null}
+        </>
     )
 }
 
@@ -60,12 +64,11 @@ const ss = {
     Header: {
         color: 'white',
         fontSize: 8*2.5,
-        marginBottom:8*2
+        marginBottom:8*2,
+        paddingLeft: 20,
+    },
+    postlist:{
+        paddingRight: 20,
     }
 }
 
-
-/*
-
-
-*/

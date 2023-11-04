@@ -1,5 +1,5 @@
 // reference: https://www.freecodecamp.org/news/building-a-real-time-chat-app-with-reactjs-and-firebase/
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useLayoutEffect, useReducer, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../styles/Colors';
@@ -11,12 +11,17 @@ import { auth, db } from '../FirebaseConfig';
 import PersonalChatList from '../components/Chat/PersonalChatList';
 
 export default function Chat(){
+    //variables
     const navigation = useNavigation()
+    const route = useRoute();
+    
+    //states
     const [chatMode, setChatMode] = useState('chats')
     const [receiverid, setReceiverid] = useState('community')
     const [ignore, forceUpdate] = useReducer(x=>x+1)
     const [chats, setChats] = useState([]);
     
+    //useEffects
     useLayoutEffect(() =>{
         navigation.setOptions({
             headerShown: false,
@@ -64,6 +69,7 @@ export default function Chat(){
         setReceiverid("community")
     }},[chatMode]);
 
+    //functions
     const handleSwitchChats=() =>{
         console.log('show chats')
         setChatMode('chats')

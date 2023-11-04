@@ -3,7 +3,6 @@ import { Image, Pressable, Text } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 
 function DInput({post}){
-
     const date = new Date(post?.DateTime.seconds*1000);
     return (
         <View style={dtss.date}>
@@ -14,20 +13,18 @@ function DInput({post}){
             />
             {/* Date Picker */} 
             <Pressable  style={dtss.input}>
-                <Text style={dtss.text} >{date.getDate()}/{date.getMonth()}/{date.getFullYear()}</Text>
+                <Text style={dtss.text} >{date.getDate()}/{date.getMonth()+1}/{date.getFullYear()}</Text>
             </Pressable>
         </View>
     )
 }
 function TInput({post}){
     const date = new Date(post?.DateTime.seconds*1000);
-
     var isPast12 = date.getHours() > 12;
     var hour = (isPast12) ? date.getHours()-12 : date.getHours();
     var mins = date.getMinutes();
     mins = mins>9? mins: "0"+mins;
     var AmPm = isPast12 ? "PM": "AM";
-    
     return (
         <View style={dtss.time}>
             {/* Time logo */}
@@ -43,7 +40,6 @@ function TInput({post}){
     )
 }
 export default function DetailsSection({post}){
-
     return (
         <>
             <Text style={ds.Header}>Details</Text>

@@ -9,16 +9,13 @@ import SafeViewAndroid from '../styles/SafeViewAndroid';
 import { auth, db } from '../FirebaseConfig';
 
 export default function CreatePost(){
-
     const [page, setPage] = useState(0)
-
     const [post,setPost] = useState({
         player: 3,
         dateTime: new Date(),
-        location: ''
+        location: '',
     })
-
-    const createPost =async ()=>{
+    const createPost = async ()=>{
         console.log("creating post: ",post)
         db.collection('posts').add({
             player: post.player,
@@ -42,13 +39,19 @@ export default function CreatePost(){
         });
         // console.log('res.id :>> ', res.id);
     }
-
     const handleNext = () => {
         setPage(page+1)
         console.log('page :>> ', page);
         console.log('post :>> ', post);
+        console.log('post.location.markerPlaced :>> ',Object.keys(post.location).length);
         if(page==2){
-            createPost()
+            if(Object.keys(post.location).length==0){
+                console.log('location not selected')
+                setPage(page-0);
+                return;
+            }
+            createPost();
+            console.log('creating post :>> ', post);
             navigation.navigate("home")
             setPage(0)
         }
@@ -104,8 +107,8 @@ const ss = StyleSheet.create({
         backgroundColor: Colors.PrimaryBlack,
         height: "100%",
         width: "100%",
-        paddingLeft: 20,
-        paddingRight: 20,
+        // paddingLeft: 20,
+        // paddingRight: 20,
     },
     prompt:{
         color: 'white'

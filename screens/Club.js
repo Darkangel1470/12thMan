@@ -12,38 +12,16 @@ import NavTab from '../components/NavTab comp/NavTab';
 import { auth, db } from '../FirebaseConfig';
 
 export default function Club(){
-
     //variables
     const navigation = useNavigation()
-    const isFocused = useIsFocused()
-
     useLayoutEffect(()=>{
         navigation.setOptions({
             headerShown: false
         })
     })
-
-    // //setters
-    // useEffect(()=>{
-    //     console.log('isFocused :>> ', isFocused);
-    //     db.collection('clubmembers')
-    //     .where('userid','==',auth.currentUser?.email)
-    //     .get().then((ss)=>{
-    //         ss.forEach(doc=>{
-    //             if(doc.exists){
-    //                 console.log('user club :>> ', doc.data());
-    //                 navigation.navigate('clubdetails',{cid: doc.data().clubid})
-    //             }else{
-    //                 console.log('havent joined a club')
-    //             }
-    //         })
-    //     })
-    // },[isFocused])
-
     const handleCreate = ()=>{
         navigation.navigate('createclub')
     }
-
     return (
             <SafeAreaView style={ss.Container}>
                 {/* Search */} 
@@ -55,10 +33,8 @@ export default function Club(){
                 {/* NavTab */}
                 <NavTab />
             </SafeAreaView>
-
     )
 }
-
 const ss = StyleSheet.create({
     Container: {
         backgroundColor: Colors.PrimaryBlack,

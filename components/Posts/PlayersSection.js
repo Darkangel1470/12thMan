@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Player from './Player';
 import { db } from '../../FirebaseConfig';
+import { screen } from '../../styles/SafeViewAndroid';
+import { ScrollView } from 'react-native';
 
 export default function PlayersSection({pid}){
     const [players, setPlayers] = useState([])
@@ -12,7 +14,6 @@ export default function PlayersSection({pid}){
     const handleShowMore = () => {
         setShowMore(!showMore)
     }
-
     useEffect(()=>{
         db.collection('players').where('postid', '==',pid)
             .get().then(snapshot => {
@@ -21,7 +22,6 @@ export default function PlayersSection({pid}){
                     rels.push(doc.data())
                 })
                 setRelations(rels)
-                
             }).catch((err) => {
                 console.log('err :>> ', err);
             })
@@ -45,8 +45,16 @@ export default function PlayersSection({pid}){
         <>
             <Text style={ss.Header}>Players</Text>
             <View style={ss.Container}>
-                <Text>{update}</Text>
-                {players?.map((item)=><Player key={item.email} item={item}/>)}
+                <ScrollView horizontal={true} style={ss.hor}>
+                    <FlatList 
+                        data={players}
+                        renderItem={({item}) =>(
+                            <View style={{width: screen.width-40}}>
+                                <Player key={item.email} item={item}/>
+                            </View>
+                        )}
+                    />
+                </ScrollView>
             </View>
             <Pressable style={ss.readmoreView} onPress={handleShowMore}>
                 <View style={ss.readmore}>
@@ -74,6 +82,8 @@ const ss = StyleSheet.create({
         height: 8,
         width: 8*20,
         borderRadius:8,
-
+    },
+    postlist:{
+        width: screen.width-20//20 for left right padding
     }
 })

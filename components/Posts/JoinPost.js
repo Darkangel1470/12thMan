@@ -1,41 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/Colors";
-import { auth, db } from "../../FirebaseConfig";
 
 
-
-function JoinButton({handleJoin, player}){
+function JoinButton({handleJoin, player, pj}){
     return (        
         <Pressable style={ss.Join} onPress={handleJoin}>
-            <Text style={{color: Colors.SecondaryBlue}}>Join  </Text>
+            <Text style={{color: Colors.AccentWhite}}>Join  </Text>
             <View style={ss.JoinNum}>
-                <Text style={{color: Colors.SecondaryBlue}}> 5/{player*2} </Text>
+                <Text style={{color: Colors.AccentWhite}}> {pj}/{player*2} </Text>
             </View>
         </Pressable>
     )
-
 }
-
-function LeaveButton({handleJoin, player}){
+function LeaveButton({handleJoin, player, pj}){
     return (
         <Pressable style={[ss.Join, ss.Leave]} onPress={handleJoin}>
             <Text style={{color: Colors.AccentWhite}}>Leave  </Text>
             <View style={ss.JoinNum}>
-                <Text style={{color: Colors.AccentWhite}}> 5/{player*2} </Text>
+                <Text style={{color: Colors.AccentWhite}}> {pj}/{player*2} </Text>
             </View>
         </Pressable>
     )
 }
-
-export default function JoinPost({handleJoin, player, isJoined}){
-
- 
+export default function JoinPost({handleJoin, player, isJoined, playerJoined}){
     return (
         <>
             {(isJoined)
-            ?<LeaveButton handleJoin={handleJoin} player={player}/>
-            :<JoinButton handleJoin={handleJoin} player={player}/>
+            ?<LeaveButton handleJoin={handleJoin} player={player} pj={playerJoined}/>
+            :<JoinButton handleJoin={handleJoin} player={player} pj={playerJoined}/>
             }
         </>
     )

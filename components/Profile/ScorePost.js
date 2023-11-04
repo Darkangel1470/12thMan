@@ -6,8 +6,6 @@ export default function ScorePost({item}){
     if(!item){
       return;
     }    
-    
-
     return (
         <Post item ={item}/>
     )

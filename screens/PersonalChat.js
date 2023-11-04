@@ -18,19 +18,12 @@ export default function PersonalChat(){
     //variables
     const navigation = useNavigation();
     const route = useRoute();
-
     var userid =  route.params?.userid;
-    
-    
     
     //states
     const [receiverid, setReceiverid] = useState();
     const [chats, setChats] = useState([])
-
     const [mount,setMount] = useState(true)
-
-
-
 
     //auto set
     useEffect(()=>{if(mount){console.log('loading receiverid...')
@@ -43,13 +36,14 @@ export default function PersonalChat(){
                 if(item.user==userid){
                     console.log('found conversation')
                     rid=item.receiverid;
-                    setReceiverid(item.receiverid);
                 }
             })
             // if new conversation
             if(!rid){
                 console.log('creating new conversation')
                 startConversation(userid, cl);
+            }else{
+                setReceiverid(rid);
             }
         })
     }},[mount])
@@ -71,7 +65,8 @@ export default function PersonalChat(){
     function startConversation(userid, mycl){
         //create rid
         var rid = userid+auth.currentUser?.email+"";
-        console.log('receiverid :>> ', receiverid);
+        setReceiverid(rid);
+        console.log('receiverid :>> ', rid);
 
         //add conversation to myuser
         mycl.push({user: userid, receiverid: rid})
@@ -91,10 +86,13 @@ export default function PersonalChat(){
             db.collection('users').doc(userid)
             .update({
                 conversationlist: ocl
+            }).then(doc=>{
+                console.log('doc.id :>> ', rid);
             })
         })
 
     }
+    
     return (
         <SafeAreaView style={ss.container}>
             {/* header */}
@@ -110,7 +108,7 @@ export default function PersonalChat(){
                 </Pressable>
                 {/* User image */}
                 {/* User name */}
-                <Text style={ss.name}>Nihar Kunder</Text>
+                <Text style={ss.name}>{userid}</Text>
             </View>
             {/* chatBody */}
                 {/* their textz */}
@@ -121,7 +119,7 @@ export default function PersonalChat(){
                 />
             {/* inputField */}
                 <View style={ss.chatInput}>
-                    <ChatInput receiverid={receiverid}/>
+                    {receiverid ? <ChatInput receiverid={receiverid}/> :null}
                 </View>
         </SafeAreaView>
     )
